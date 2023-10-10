@@ -1,0 +1,21 @@
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+}
+repositories {
+    mavenCentral()
+}
+apply plugin: "idea"
+
+subprojects {
+    // This is executed on all subprojects that use the NodeJS plugin (https://github.com/node-gradle/gradle-node-plugin - npm_<...> (e.g., npm_install))
+    plugins.withId('com.github.node-gradle.node') {
+        node {
+            version = '18.18.0'
+            npmVersion = ''
+            download = true
+            distBaseUrl = "https://nodejs.org/dist"
+        }
+    }
+}

@@ -1,0 +1,9 @@
+plugins {
+    id "com.github.node-gradle.node" version "3.4.0"
+}
+apply plugin: 'base'
+
+clean {
+    delete file("${project.buildDir}")
+    delete file("${projectDir}/dist")
+}

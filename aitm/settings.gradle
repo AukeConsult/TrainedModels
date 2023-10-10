@@ -1,0 +1,3 @@
+rootProject.name = 'aitm'
+include 'frontend'
+include 'server'
