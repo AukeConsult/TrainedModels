@@ -1,6 +1,17 @@
-import { Request, Response } from "express";
+import {Request, Response, Router} from "express";
 
-export default class TutorialController {
+class TutorialController {
+
+  router = Router();
+
+  constructor() {
+    this.router.post("/", this.create);
+    this.router.get("/", this.findAll);
+    this.router.get("/:id", this.findOne);
+    this.router.put("/:id", this.update);
+    this.router.delete("/:id", this.delete);
+  }
+
   async create(req: Request, res: Response) {
     try {
       res.status(201).json({
@@ -66,3 +77,5 @@ export default class TutorialController {
     }
   }
 }
+
+export default new TutorialController().router;

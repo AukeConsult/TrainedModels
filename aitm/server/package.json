@@ -1,12 +1,13 @@
 {
-  "name": "express-typescript-example",
-  "version": "1.0.0",
+  "name": "backend-server",
+  "version": "0.1",
   "description": "Rest API using Node.js, TypeScript, Express",
-  "main": "server.ts",
+  "main": "src/server.ts",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc",
-    "dev": "node ./build/server.js",
+    "dev-build": "node ./build/server.js",
+    "dev": "nodemon - exec 'ts-node' src/server.ts",
     "start": "tsc && npm run dev"
   },
   "keywords": [
@@ -19,12 +20,13 @@
     "nodejs",
     "crud"
   ],
-  "author": "bezkoder",
+  "author": "leif",
   "license": "ISC",
   "devDependencies": {
     "@types/cors": "^2.8.13",
     "@types/express": "^4.17.17",
     "@types/node": "^20.3.3",
+    "nodemon": "^3.0.1",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
   },
