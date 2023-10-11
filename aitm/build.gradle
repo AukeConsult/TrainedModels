@@ -13,7 +13,7 @@ subprojects {
     plugins.withId('com.github.node-gradle.node') {
         node {
             version = '18.18.0'
-            npmVersion = ''
+            npmVersion = '10.2.0'
             download = true
             distBaseUrl = "https://nodejs.org/dist"
         }
