@@ -1,0 +1,22 @@
+<div class="d-flex flex-column h-100">
+  <app-nav-bar></app-nav-bar>
+
+  <div class="row">
+    <div class="col-sm-2">
+      <div class="container flex-grow-1 flex-shrink-1">
+        <app-resources></app-resources>
+      </div>
+    </div>
+    <div class="col-sm-8">
+      <div class="container flex-grow-1 flex-shrink-1">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+    <div class="col-sm-2">
+      <div class="container flex-grow-1 flex-shrink-1">
+        <app-user></app-user>
+      </div>
+    </div>
+  </div>
+  <app-footer></app-footer>
+</div>

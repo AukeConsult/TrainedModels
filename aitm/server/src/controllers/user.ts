@@ -12,14 +12,14 @@ function updateAuthUser(user: any) {
             profile: {
                 fullname: user.nickname,
                 intro: "",
-                authProfile: user.authProfile,
                 interests: [
                     "training",
                     "development",
                     "sales",
                     "consultancy"
                 ]
-            }
+            },
+            authProfile: user.authProfile,
         },
         (retObject: any) => {
         return {
