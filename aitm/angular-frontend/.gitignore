@@ -1,0 +1,8 @@
+/node_modules/
+.gradle/
+.angular/
+.idea/
+/build/
+/dist/
+/package-lock.json
+/out-tsc/

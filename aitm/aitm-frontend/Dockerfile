@@ -1,20 +1,12 @@
 FROM node:18-alpine AS build
-
 RUN apk update && apk add git
-
 RUN mkdir -p /app
-
 WORKDIR /app
-
 COPY package.json .
 COPY package-lock.json .
-
 RUN npm install --legacy-peer-deps
-
 COPY . .
-
 RUN npm run build
-
 # -----------------
 
 FROM node:18-alpine

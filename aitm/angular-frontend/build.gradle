@@ -1,0 +1,23 @@
+buildscript {
+  repositories {
+    mavenLocal()
+  }
+}
+
+plugins {
+  id "com.github.node-gradle.node" version "3.4.0"
+}
+
+apply plugin: 'base'
+
+node {
+  version = '18.18.0'
+  npmVersion = ''
+  download = true
+  distBaseUrl = "https://nodejs.org/dist"
+}
+
+clean {
+  delete file("${project.buildDir}")
+  delete file("${projectDir}/dist")
+}

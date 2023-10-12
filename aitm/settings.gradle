@@ -1,4 +1,4 @@
 rootProject.name = 'aitm'
-include 'frontend'
+include 'angular-frontend'
 include "aitm-frontend"
 include 'server'
