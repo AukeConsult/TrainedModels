@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthClientConfig } from '@auth0/auth0-angular';
-import { ApiService } from 'src/app/api.service';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-external-api',
@@ -13,7 +13,7 @@ export class ExternalApiComponent {
   hasApiError = false;
 
   constructor(
-    private api: ApiService,
+    private api: UserService,
     private configFactory: AuthClientConfig
   ) {
     this.audience = this.configFactory.get()?.authorizationParams.audience;

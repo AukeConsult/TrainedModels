@@ -1,12 +1,12 @@
 import {Request, Response, Router} from "express";
-import MongoHelper from "../db/mongo.helper"
+import MongoService from "./mongo.service"
 
-import intr from './intr.tags.json';
-import domain from './domain.tags.json';
+import intr from './static/intrest.tags.json';
+import domain from './static/domain.tags.json';
 
-const mongoHelper: MongoHelper = new MongoHelper('mongodb://0.0.0.0:27017/models')
+const mongoHelper: MongoService = new MongoService('mongodb://0.0.0.0:27017/models')
 
-export default class ParameterController {
+export default class StaticController {
 
     public router = Router();
 

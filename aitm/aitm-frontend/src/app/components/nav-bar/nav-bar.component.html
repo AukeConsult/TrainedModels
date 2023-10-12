@@ -27,29 +27,16 @@
           <li class="nav-item" *ngIf="auth.isAuthenticated$ | async">
             <a routerLink="external-api" class="nav-link">External API</a>
           </li>
-          <li class="nav-item" *ngIf="auth.isAuthenticated$ | async">
-            <button
-              class="btn btn-link p-0"
-              style="min-width: unset"
-              id="qsLogoutBtn"
-              (click)="logout()"
-            >
-              Log out
-            </button>
-          </li>
         </ul>
 
         <ul class="navbar-nav d-none d-md-block">
           <!-- Login button: show if NOT authenticated -->
-          <li
-            class="nav-item"
-            *ngIf="(auth.isAuthenticated$ | async) === false"
-          >
+          <li class="nav-item"
+            *ngIf="(auth.isAuthenticated$ | async) === false">
             <button
               id="qsLoginBtn"
               class="btn btn-primary btn-margin"
-              (click)="loginWithRedirect()"
-            >
+              (click)="loginWithRedirect()">
               Log in
             </button>
           </li>
@@ -58,16 +45,12 @@
 
           <!-- Fullsize dropdown: show if authenticated -->
           <li
-            class="nav-item dropdown"
-            *ngIf="auth.user$ | async as user"
-            ngbDropdown
-          >
+            class="nav-item dropdown" *ngIf="auth.user$ | async as user" ngbDropdown>
             <a
               ngbDropdownToggle
               class="nav-link dropdown-toggle"
               id="profileDropDown"
-              data-toggle="dropdown"
-            >
+              data-toggle="dropdown">
               <!-- Profile image should be set to the profile picture from the id token -->
               <img
                 [src]="user.picture"
@@ -86,8 +69,7 @@
               </a>
               <button
                 (click)="logout()"
-                class="btn btn-link dropdown-item"
-              >
+                class="btn btn-link dropdown-item">
                 <fa-icon [icon]="faPowerOff" class="mr-3"></fa-icon> Log out
               </button>
             </div>

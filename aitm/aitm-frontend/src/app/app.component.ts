@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ApiService} from "./api.service";
+import {UserService} from "./services/user.service";
 
 @Component({
   selector: 'app-root',
@@ -8,6 +8,6 @@ import {ApiService} from "./api.service";
 })
 export class AppComponent implements OnInit {
   title = 'Auth0 Angular SDK Sample';
-  constructor(private api:  ApiService) {}
+  constructor(private api:  UserService) {}
   ngOnInit(): void {}
 }

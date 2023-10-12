@@ -1,13 +1,11 @@
 import {FindCursor, FindOptions, MongoClient} from "mongodb";
 
-export default class MongoHelper {
+export default class MongoService {
 
     private mongoDb: MongoClient;
-    constructor(mongoUrl: string) {
-        this.mongoDb = new MongoClient(mongoUrl)
-    }
+    constructor(mongoUrl: string) {this.mongoDb = new MongoClient(mongoUrl)}
 
-    findOneAndUpdate(
+    updateAndGet(
         document: string,
         filter: any,
         set: any,
@@ -15,8 +13,7 @@ export default class MongoHelper {
     ) {
         return new Promise((resolve, reject) => {
             this.mongoDb.connect().then(client => {
-                const doc = client.db().collection(document)
-                doc.findOneAndUpdate(
+                client.db().collection(document).findOneAndUpdate(
                     filter,
                     { $set: set },
                     {returnDocument: "after", upsert: true, includeResultMetadata: true}

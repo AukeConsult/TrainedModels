@@ -1,0 +1,20 @@
+{
+    "type": "domain",
+    "descr": "Usage domain of models",
+    "tags" : [
+        {
+            "id": "health", "desc": "Health domain",
+            "tags": [
+                {"id": "medical", "desc": ""}, {"id": "adminstration", "desc": ""}
+            ]
+            },
+        {
+            "id": "goverment", "desc": "Goverment domain",
+            "tags": []
+        },
+        {
+            "id": "defence", "desc": "Defence and military usage",
+            "tags": []
+        }
+    ]
+}

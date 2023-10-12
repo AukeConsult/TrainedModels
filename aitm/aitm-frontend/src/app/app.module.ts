@@ -20,7 +20,6 @@ import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { environment as env } from '../environments/environment';
 import { CallbackComponent } from "./callback.component";
 import { ResourcesComponent } from './components/resources/resources.component';
-import { UserComponent } from './components/user/user.component';
 
 @NgModule({
   declarations: [
@@ -35,8 +34,7 @@ import { UserComponent } from './components/user/user.component';
     LoadingComponent,
     ExternalApiComponent,
     ErrorComponent,
-    ResourcesComponent,
-    UserComponent
+    ResourcesComponent
   ],
   imports: [
     BrowserModule,
@@ -57,10 +55,6 @@ import { UserComponent } from './components/user/user.component';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthHttpInterceptor,
       multi: true,
-    },
-    {
-      provide: Window,
-      useValue: window,
     },
     {
       provide: HIGHLIGHT_OPTIONS,

@@ -1,4 +1,5 @@
 import config from '../../../auth_config.json';
+import {window} from "rxjs/operators";
 
 const { domain, clientId, audience, apiUri, errorPath } = config as {
   domain: string;

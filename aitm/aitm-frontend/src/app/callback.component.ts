@@ -1,32 +1,36 @@
 import {Component, OnInit} from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { ApiService } from 'src/app/api.service';
+import { UserService } from 'src/app/services/user.service';
 import {Router} from '@angular/router';
+import {UserProfile} from "./domain/user";
 
 @Component({
-  template: ``,
+  template: `<p>callback</p>`,
   selector: 'app-callback'
 })
 export class CallbackComponent implements OnInit {
 
   constructor(
-    private api: ApiService,
+    private userService: UserService,
     private auth: AuthService,
     private router: Router
-  ) {}
+  ) {
+      console.log("callback constructor")
+  }
 
   ngOnInit(): void {
+      console.log("callback on init")
+
     this.auth.user$.subscribe(
       (profile) => {
-        this.api.logon$({
-          userid: profile.email,
-          nickname: profile.nickname,
-          sub: profile.sub,
-          authProfile: profile
-        }).then(ret => {
-          console.log(ret)
+        this.userService.saveProfile(profile).then((ret: {
+            new?: boolean,
+            user?: UserProfile
+            err?: any
+        })  => {
+            console.log(ret)
+            this.router.navigate(['profile'])
         })
-        this.router.navigate(['']);// used for routing after importing Router
       }
     );
   }

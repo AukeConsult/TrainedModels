@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '@auth0/auth0-angular';
-import { ApiService } from 'src/app/api.service';
-import {AppComponent} from 'src/app/app.component'
+import { UserService } from 'src/app/services/user.service';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-profile',
@@ -9,15 +8,24 @@ import {AppComponent} from 'src/app/app.component'
   styleUrls: ['./profile.component.css'],
 })
 export class ProfileComponent implements OnInit {
-  profileJson: string = null;
 
-  constructor(
-    private api: ApiService,
-    public auth: AuthService,
-    private app: AppComponent
-  ) {}
-  ngOnInit() {
-    console.log("open profile")
-    this.profileJson = JSON.stringify(JSON.parse(localStorage.getItem("user")), null, 2)
+    public userProfile;
+    public canedit: boolean
+    public newuser: boolean = false
+
+    constructor(
+        public userService: UserService,
+        private route: ActivatedRoute
+    ) {}
+
+    ngOnInit() {
+        const id = this.route.snapshot.paramMap.get("id");
+        if(!id) {
+            this.userProfile=this.userService.userProfile
+            this.newuser = this.userService.newuser
+            this.canedit=true;
+        } else {
+            // read user
+        }
   }
 }

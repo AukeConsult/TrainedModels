@@ -1,22 +1,26 @@
-<div class="container mt-5" *ngIf="auth.user$ | async as user">
-  <div
-    class="row align-items-center profile-header mb-5 text-center text-md-left"
-  >
+<div class="container mt-5" *ngIf="userProfile as user">
+
+  <div class="row align-items-center profile-header mb-5 text-center text-md-left">
     <div class="col-md-2">
       <img
-        [src]="user.picture"
+        [src]="user.profile.picture"
         class="rounded-circle img-fluid profile-picture mb-3 mb-md-0"
       />
     </div>
     <div class="col-md">
-      <h2>{{ user.nickname }}</h2>
-      <p class="lead text-muted">{{ user.email }}</p>
+      <h3>{{ user.profile.nickname }}</h3>
+      <p class="lead text-muted">{{ user.userid }}</p>
+    </div>
+    <div class="col-md">
+      <p>Fullname:</p>
+      <p class="lead text-muted">{{ user.profile.fullname }}</p>
     </div>
   </div>
 
-  <div class="row" *ngIf="profileJson">
-    <pre
-      class="rounded"
-    ><code [highlight]="profileJson" class="json"></code></pre>
+  <div *ngIf="newuser" class="row align-items-center mb-5 text-center text-md-left">
+    <div class="col-md-8">
+      <h3>Welcome as new user</h3>
+    </div>
   </div>
+
 </div>
