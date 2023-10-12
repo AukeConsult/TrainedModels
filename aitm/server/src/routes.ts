@@ -2,7 +2,9 @@ import express, {Application, Router} from "express";
 import cors, {CorsOptions} from "cors";
 import home from "./controllers/home";
 import tutorialRoute from "./controllers/tutorial";
-import UserController from "./controllers/user";
+import UserController from "./controllers/user.controller";
+import ParameterController from "./parameters/parameter.controller";
+
 import {auth} from 'express-oauth2-jwt-bearer';
 
 import helmet from "helmet";
@@ -34,6 +36,7 @@ export default class Routes {
 
         //app.use("/api/users", new UserController(checkAuth).router);
         app.use("/api/users", new UserController().router);
+        app.use("/api/parameters", new ParameterController().router);
 
     }
 

@@ -1,7 +1,8 @@
 import {Request, Response, Router} from "express";
 import MongoHelper from "../db/mongo.helper"
 
-const mongo: MongoHelper = new MongoHelper()
+const mongoUrl = 'mongodb://0.0.0.0:27017/models'
+const mongo: MongoHelper = new MongoHelper(mongoUrl)
 
 function updateAuthUser(user: any) {
     return mongo.findOneAndUpdate("users",
