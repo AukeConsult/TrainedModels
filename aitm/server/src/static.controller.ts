@@ -4,7 +4,7 @@ import MongoService from "./mongo.service"
 import intr from './static/intrest.tags.json';
 import domain from './static/domain.tags.json';
 
-const mongoHelper: MongoService = new MongoService('mongodb://0.0.0.0:27017/models')
+const mongoService: MongoService = new MongoService('mongodb://0.0.0.0:27017/models')
 
 export default class StaticController {
 
@@ -12,8 +12,8 @@ export default class StaticController {
 
     constructor() {
 
-        mongoHelper.updateTags("intr",intr)
-        mongoHelper.updateTags("domain",domain)
+        mongoService.updateTags("intr",intr)
+        mongoService.updateTags("domain",domain)
 
         this.router.get("/", function(req: Request, res: Response): Response {
             return res.json({
@@ -31,11 +31,11 @@ export default class StaticController {
 
     getTags(req: Request, res: Response) {
         if(req.params.tagtype) {
-            mongoHelper.findTag(req.params.tagtype)
+            mongoService.findTag(req.params.tagtype)
                 .then(result => res.status(201).json(result))
                 .catch(err => res.status(500).json(err))
         } else {
-            mongoHelper.findAllTags()
+            mongoService.findAllTags()
                 .then(result => res.status(201).json(result))
                 .catch(err => res.status(500).json(err))
         }

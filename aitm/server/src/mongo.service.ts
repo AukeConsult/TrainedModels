@@ -80,4 +80,18 @@ export default class MongoService {
         });
     }
 
+    async findUser(id: any) {
+        return new Promise((resolve, reject) => {
+            this.mongoDb.connect().then(client => {
+                client.db().collection("users").findOne(
+                    {_id: id}
+                ).then(user => {
+                    resolve(user)
+                }).catch((reason: any) => console.log(reason))
+            }).catch(err => {
+                reject({err: err});
+            })
+        });
+    }
+
 }

@@ -32,11 +32,11 @@ export default class Routes {
         app.use(express.urlencoded({ extended: true }));
 
         app.use("/api", home);
-        app.use("/api/tutorials", tutorialRoute);
+        app.use("/api/tutorial", tutorialRoute);
 
         //app.use("/api/users", new UserController(checkAuth).router);
-        app.use("/api/users", new UserController().router);
-        app.use("/api/parameters", new StaticController().router);
+        app.use("/api/user", new UserController().router);
+        app.use("/api/parameter", new StaticController().router);
 
     }
 
