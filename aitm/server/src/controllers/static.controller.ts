@@ -1,10 +1,10 @@
 import {Request, Response, Router} from "express";
-import MongoService from "./mongo.service"
+import UserDb from "../db/user.db"
 
-import intr from './static/intrest.tags.json';
-import domain from './static/domain.tags.json';
+import intr from '../static/intrest.tags.json';
+import domain from '../static/domain.tags.json';
 
-const mongoService: MongoService = new MongoService('mongodb://0.0.0.0:27017/models')
+const mongoService: UserDb = new UserDb('mongodb://0.0.0.0:27017/models')
 
 export default class StaticController {
 

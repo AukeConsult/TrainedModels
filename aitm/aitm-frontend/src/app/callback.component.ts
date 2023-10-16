@@ -20,19 +20,21 @@ export class CallbackComponent implements OnInit {
 
   ngOnInit(): void {
       console.log("callback on init")
-
-    this.auth.user$.subscribe(
-      (profile) => {
-        this.userService.saveProfile(profile).then((ret: {
-            new?: boolean,
-            user?: UserProfile
-            err?: any
+      this.auth.user$.subscribe(
+        (profile) => {
+            this.userService.saveProfile(profile).then((ret: {
+                new?: boolean,
+                user?: UserProfile
+                err?: any
         })  => {
             console.log(ret)
-            this.router.navigate(['profile'])
+            if(!ret.err) {
+                this.router.navigate(['profile'])
+            } else {
+                console.error(ret.err.message)
+            }
         })
       }
     );
   }
-
 }

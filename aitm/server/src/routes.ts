@@ -2,8 +2,8 @@ import express, {Application, Router} from "express";
 import cors, {CorsOptions} from "cors";
 import home from "./controllers/home";
 import tutorialRoute from "./controllers/tutorial";
-import UserController from "./user.controller";
-import StaticController from "./static.controller";
+import UserController from "./controllers/user.controller";
+import StaticController from "./controllers/static.controller";
 
 import {auth} from 'express-oauth2-jwt-bearer';
 

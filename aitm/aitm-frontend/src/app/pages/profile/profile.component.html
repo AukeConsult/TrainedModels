@@ -4,16 +4,16 @@
     <div class="col-md-2">
       <img
         [src]="user.profile.picture"
-        class="rounded-circle img-fluid profile-picture mb-3 mb-md-0"
+        class="img-fluid profile-picture mb-3 mb-md-0"
       />
     </div>
     <div class="col-md">
-      <h3>{{ user.profile.nickname }}</h3>
-      <p class="lead text-muted">{{ user.userid }}</p>
+      <h3>{{ user.nickname }}</h3>
+      <p class="lead text-muted">{{ user.profile.title }}</p>
     </div>
     <div class="col-md">
-      <p>Fullname:</p>
-      <p class="lead text-muted">{{ user.profile.fullname }}</p>
+      <p class="lead text-muted">Fullname: {{ user.profile.fullname }}</p>
+      <p class="lead text-muted">email: {{ user.profile.email }}</p>
     </div>
   </div>
 
