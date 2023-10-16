@@ -5,94 +5,119 @@ export default class UserDb {
     private mongoClient: MongoClient;
     constructor(url: string) {this.mongoClient = new MongoClient(url)}
 
-    async getNickname(collection: Collection<Document>, nickname: string): Promise<string> {
-        let cnt = 0;
-        while (await collection.countDocuments({nickname: nickname}) > 0) {
-            cnt++
-            nickname += cnt
-            console.log(nickname)
+    lastShort_Id(client: MongoClient) {
+        return client.db().collection("users").aggregate([
+            {
+                $group: {
+                    _id: null,
+                    short_id: {$max: "$short_id"}
+                }
+            }
+        ]).next()
+    }
+
+    async newNickname(collection: Collection<Document>, nickname: string, id?: any): Promise<string> {
+
+        if(id) {
+            if(await collection.countDocuments({_id: new ObjectId(id), nickname: nickname})>0) {
+                return nickname
+            }
         }
-        return nickname
+
+        let cnt = 0;
+        let testnick= nickname
+        while (await collection.countDocuments({nickname: testnick}) > 0) {
+            cnt++
+            testnick = nickname + cnt
+            console.log(testnick)
+        }
+        return testnick
+
     }
 
     updateAuthProfile(authProfile: any) : Promise<any> {
 
         return new Promise((resolve, reject) => {
-
             this.mongoClient.connect().then(client => {
-
-                const filter = {$and: [{user_email: authProfile.email },{sub: authProfile.sub}]}
                 const collection = client.db().collection("users");
-
+                const filter = {authid: authProfile.email + "|" + authProfile.sub}
                 collection.countDocuments(filter).then(cnt => {
 
                     if(cnt==0) {
 
-                        this.getNickname(collection,authProfile.nickname).then(nickname => {
+                        this.lastShort_Id(client).then(doc => {
 
-                            collection.findOneAndUpdate(
-                                filter,
-                                {
-                                    $set:
-                                        {
-                                            nickname: nickname,
-                                            user_email: authProfile.email,
-                                            sub: authProfile.sub,
-                                            profile: {
-                                                fullname: authProfile.name,
-                                                picture: authProfile.picture,
+                            const short_id=doc==null?1000:parseInt(doc.short_id,10)+1;
+
+                            this.newNickname(collection,authProfile.nickname).then(nickname => {
+
+                                collection.findOneAndUpdate(
+                                    filter,
+                                    {
+                                        $set:
+                                            {
+                                                active: true,
+                                                newuser: true,
+                                                short_id: short_id.toString(),
+                                                nickname: nickname,
+                                                authid: authProfile.email + "|" + authProfile.sub,
                                                 email: authProfile.email,
-                                                title: "",
-                                                intro: "",
-                                            },
-                                            interests: [
-                                                "training",
-                                                "development",
-                                                "sales",
-                                                "consultancy"
-                                            ],
-                                            tags: [
-                                                {parentid: "x", id: "healt", desc: "", search: ""},
-                                                {parentid: "x", id: "domain", desc: "", search: ""}
-                                            ],
-                                            docs: [
-                                                {docid: 1123123123123, type: "model", ingres: ""},
-                                                {docid: 1123123123123, type: "trainer", ingres: ""}
-                                            ],
-                                            authProfile: authProfile,
+                                                accessrole: "admin",
+                                                profile: {
+                                                    fullname: authProfile.name,
+                                                    picture: authProfile.picture,
+                                                    alt_email: "",
+                                                    title: "",
+                                                    intro: "",
+                                                    interests: []
+                                                },
+                                                meta: {
+                                                    authProfile: authProfile,
+                                                    roles: [
+                                                        "guest"
+                                                    ],
+                                                    tags: [
+                                                        {parentid: "x", id: "healt", desc: "", search: ""},
+                                                        {parentid: "x", id: "domain", desc: "", search: ""}
+                                                    ],
+                                                    docs: [
+                                                        {docid: 1123123123123, type: "model", ingres: ""},
+                                                        {docid: 1123123123123, type: "trainer", ingres: ""}
+                                                    ]
+                                                },
+                                            }
+                                    },
+                                    {returnDocument: "after", upsert: true}
 
-                                        }
-                                },
-                                {returnDocument: "after", upsert: true}
-
-                            ).then(retUser => {
-                                resolve( {
-                                    newuser: true,
-                                    user: retUser
+                                ).then(retUser => {
+                                    resolve(retUser)
+                                }).catch(err => {
+                                    reject({err: err})
                                 })
-                            }).catch(err => {
-                                reject({err: err})
+
                             })
 
+                        }).catch(err => {
+                            console.log(err)
                         })
 
-                    } else {
 
+                    } else {
                         collection.findOneAndUpdate(
                             filter,
                             {
-                                $set: {authProfile: authProfile}
+                                $set: {
+                                    newuser: false,
+                                    authProfile: authProfile
+                                }
                             },
                             {returnDocument: "after", upsert: true}
                         ).then(retUser => {
-                            resolve( {
-                                user: retUser
-                            })
+                            resolve(retUser)
                         }).catch(err => {
                             reject({err: err})
                         })
                     }
-
                 })
 
             }).catch(err => {
@@ -106,36 +131,42 @@ export default class UserDb {
     updateUser(id: any, user: any): Promise<any> {
 
         return new Promise((resolve, reject) => {
-
             this.mongoClient.connect().then(client => {
+
+                // verify update and remove fixed metadata
+                if(user.meta) delete user['meta']
+                if(user.newuser) delete user['newuser']
+                if(user.short_id) delete user['short_id']
+                if(user.authid) delete user['authid']
+                if(user.email) delete user['email']
+                if(user.accessrole) delete user['accessrole']
 
                 const collection = client.db().collection("users");
                 const filter = {_id: new ObjectId(id)}
-                this.getNickname(collection,user.nickname).then(nickname => {
-
+                this.newNickname(
+                    collection,user.nickname, id
+                ).then(nickname => {
                     user.nickname = nickname
+                    return user
+                }).then(user =>
                     collection.findOneAndUpdate(
                         filter,
                         { $set: user },
-                        {returnDocument: "after", upsert: true}
+                        {returnDocument: "after", upsert: false}
                     ).then(retUser => {
-                        resolve( {
-                            user: retUser
-                        })
+                        resolve( retUser)
                     }).catch(err => {
                         reject({
                             err: err
                         });
                     })
-                })
-
+                )
             }).catch(err => {
                 reject({
                     err: err
                 });
             })
         });
-
     }
 
     updateAndGet(
@@ -161,67 +192,40 @@ export default class UserDb {
         });
     }
 
-    async updateTags(tagType: string, tagValues:any) {
-        try {
-            const client = await this.mongoClient.connect()
-            const tags = client.db().collection("tagtypes")
-            const ret = await tags.findOneAndUpdate(
-                {type: tagType},
-                { $set: tagValues },
-                {returnDocument: "after", upsert: true, includeResultMetadata: true}
-            )
-        } catch (err) {
-            console.log(err)
-        }
-    }
-
-    async findTag(tagType: string) {
+    readUser(id: any) {
         return new Promise((resolve, reject) => {
             this.mongoClient.connect().then(client => {
-                client.db().collection("tagtypes").findOne(
-                    {type: tagType},
-                    {
-                        projection: {_id: 0, type: 1, descr: 1, tags: 1},
-                    }
-                ).then(tags => {
-                    resolve(tags)
-                }).catch((reason: any) => console.log(reason))
-            }).catch(err => {
-                reject({err: err});
-            })
-        });
-    }
 
-    async findAllTags() {
-        return new Promise((resolve, reject) => {
-            this.mongoClient.connect().then(async client => {
-
-                const tags = client.db().collection("tagtypes");
-                const docs: FindCursor<any> = tags.find({},{
-                    sort: {type: 1},
-                    projection: {_id: 0, type: 1, descr: 1, tags: 1},
+                client.db().collection("users").findOne(id.length==24 ? {
+                    _id: new ObjectId(id)
+                } : {
+                    $or: [{short_id: id},{nickname: id}]
                 })
-                const ret = []
-                for await (const doc of docs) {
-                    ret.push(doc)
-                }
-                resolve(ret)
-
+                    .then(user => resolve(user))
+                    .catch((reason: any) => reject({err: reason}))
             }).catch(err => {
+                console.log(err)
                 reject({err: err});
             })
         });
     }
 
-    async getUser(id: any) {
+    readUserlist() {
         return new Promise((resolve, reject) => {
             this.mongoClient.connect().then(client => {
-                client.db().collection("users").findOne(
-                    {_id: id}
-                ).then(user => {
-                    resolve(user)
-                }).catch((reason: any) => console.log(reason))
+                client.db().collection("users").find(
+                    {},{projection: {
+                            _id: 1,
+                            nickname: 1,
+                            active: 1,
+                            short_id: 1,
+                            picture: 1,
+                            profile: 1
+                        }}
+                ).toArray()
+                    .then(docs => resolve(docs))
             }).catch(err => {
+                console.log(err)
                 reject({err: err});
             })
         });

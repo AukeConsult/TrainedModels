@@ -1,19 +1,19 @@
 import {Request, Response, Router} from "express";
-import UserDb from "../db/user.db"
 
 import intr from '../static/intrest.tags.json';
 import domain from '../static/domain.tags.json';
+import TagsDb from "../db/tags.db";
 
-const mongoService: UserDb = new UserDb('mongodb://0.0.0.0:27017/models')
+const tagsDb: TagsDb = new TagsDb('mongodb://0.0.0.0:27017/models')
 
-export default class StaticController {
+export default class ParametersController {
 
     public router = Router();
 
     constructor() {
 
-        mongoService.updateTags("intr",intr)
-        mongoService.updateTags("domain",domain)
+        tagsDb.updateTags("intr",intr)
+        tagsDb.updateTags("domain",domain)
 
         this.router.get("/", function(req: Request, res: Response): Response {
             return res.json({
@@ -31,11 +31,11 @@ export default class StaticController {
 
     getTags(req: Request, res: Response) {
         if(req.params.tagtype) {
-            mongoService.findTag(req.params.tagtype)
+            tagsDb.findTag(req.params.tagtype)
                 .then(result => res.status(201).json(result))
                 .catch(err => res.status(500).json(err))
         } else {
-            mongoService.findAllTags()
+            tagsDb.findAllTags()
                 .then(result => res.status(201).json(result))
                 .catch(err => res.status(500).json(err))
         }

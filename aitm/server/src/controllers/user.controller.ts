@@ -16,21 +16,48 @@ export default class UserController {
 
         this.router.post("/authuser", function (req: Request, res: Response) {
             userDb.updateAuthProfile(req.body)
-                .then(result => res.status(201).json(result))
+                .then(result => {
+                    if(result?.newuser && result?.newuser==true) {
+                        res.status(201).json(result)
+                    } else {
+                        res.status(200).json(result)
+                    }
+                })
                 .catch(err => res.status(500).json(err))
         });
         this.router.put("/profile/:id", function (req: Request, res: Response) {
-            const user = {
-                nickname: req.body.nickname,
-                profile: req.body.profile
-            }
-            userDb.updateUser(req.params.id,user)
-                .then(result => res.status(201).json(result))
+
+            userDb.updateUser(req.params.id,req.body)
+                .then(result => {
+                    if(result==null) res.status(404).json({})
+                    else res.status(200).json(result)
+                })
                 .catch(err => res.status(500).json(err))
         });
 
-        //this.router.get("/profile/:id", checkAuth, this.getProfile);
-        //this.router.get("/profiles", checkAuth, this.getall);
+        this.router.get("/profile/:id",function (req: Request, res: Response) {
+            userDb.readUser(req.params.id)
+                .then(user => {
+                    if(user)
+                        res.status(200).json(user)
+                    else
+                        res.status(404).json({})
+                })
+                .catch(err => res.status(500).json(err))
+            }
+        )
+
+        this.router.get("/profile",function (req: Request, res: Response) {
+                userDb.readUserlist()
+                    .then(userlist => {
+                        if(userlist)
+                            res.status(200).json(userlist)
+                        else
+                            res.status(404).json({})
+                    })
+                    .catch(err => res.status(500).json(err))
+            }
+        )
 
 
     }

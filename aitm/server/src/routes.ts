@@ -3,7 +3,7 @@ import cors, {CorsOptions} from "cors";
 import home from "./controllers/home";
 import tutorialRoute from "./controllers/tutorial";
 import UserController from "./controllers/user.controller";
-import StaticController from "./controllers/static.controller";
+import ParametersController from "./controllers/parameters.controller";
 
 import {auth} from 'express-oauth2-jwt-bearer';
 
@@ -36,7 +36,7 @@ export default class Routes {
 
         //app.use("/api/users", new UserController(checkAuth).router);
         app.use("/api/user", new UserController().router);
-        app.use("/api/parameter", new StaticController().router);
+        app.use("/api/parameters", new ParametersController().router);
 
     }
 
